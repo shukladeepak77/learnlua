@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { bubbleStyle } from "../lib/palette";
 
 interface Entry { code: string; note: string }
 interface Section { title: string; entries: Entry[] }
@@ -109,9 +110,12 @@ const sections: Section[] = [
   <p class="text-stone-600 dark:text-stone-400 mb-10">A quick syntax reference for everything covered in this course.</p>
 
   <div class="space-y-10 max-w-4xl">
-    {sections.map((section) => (
+    {sections.map((section, si) => (
       <section>
-        <h2 class="text-lg font-semibold text-stone-900 dark:text-stone-100 mb-3 border-b border-stone-300/60 dark:border-stone-800 pb-2">
+        <h2
+          class="inline-block text-sm font-semibold text-white rounded-full px-4 py-1.5 mb-3 shadow-sm"
+          style={bubbleStyle(si * 2)}
+        >
           {section.title}
         </h2>
         <div class="overflow-x-auto thin-scroll rounded-lg border border-stone-300/60 dark:border-stone-800">
