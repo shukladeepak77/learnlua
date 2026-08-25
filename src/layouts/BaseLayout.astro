@@ -35,13 +35,25 @@ const { title, description = "A free, interactive course for learning the Lua pr
       style="background-image: linear-gradient(90deg, #4a2410 0%, #8a390f 100%);"
     >
       <div class="mx-auto max-w-7xl px-4 flex h-14 items-center justify-between">
-        <a href="/" class="flex items-center gap-2 font-semibold text-white">
-          <span
-            class="inline-flex h-6 w-6 items-center justify-center rounded-full text-white text-xs font-bold shadow-sm"
-            style="background-image: linear-gradient(135deg, #e8672f 0%, #c1440e 100%);"
-          >L</span>
-          Learn Lua
-        </a>
+        <div class="flex items-center gap-1">
+          <button
+            id="mobile-menu-toggle"
+            type="button"
+            aria-label="Open lesson menu"
+            class="md:hidden -ml-2 rounded-md p-2 text-white/85 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+            </svg>
+          </button>
+          <a href="/" class="flex items-center gap-2 font-semibold text-white">
+            <span
+              class="inline-flex h-6 w-6 items-center justify-center rounded-full text-white text-xs font-bold shadow-sm"
+              style="background-image: linear-gradient(135deg, #e8672f 0%, #c1440e 100%);"
+            >L</span>
+            Learn Lua
+          </a>
+        </div>
         <div class="flex items-center gap-1">
           <a
             href="https://www.lua.org/manual/5.4/"
@@ -56,6 +68,29 @@ const { title, description = "A free, interactive course for learning the Lua pr
       </div>
     </header>
 
+    <!-- Mobile lesson menu: same colorful Sidebar, shown as a slide-out drawer below md. -->
+    <div id="mobile-menu-backdrop" class="hidden md:hidden fixed inset-0 z-40 bg-black/40"></div>
+    <div
+      id="mobile-menu-panel"
+      class="hidden md:hidden fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] overflow-y-auto thin-scroll p-4"
+      style="background-color: #f3ede1;"
+    >
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-semibold text-stone-900">Menu</span>
+        <button
+          id="mobile-menu-close"
+          type="button"
+          aria-label="Close lesson menu"
+          class="rounded-md p-2 text-stone-500 hover:bg-stone-200/60 transition-colors"
+        >
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <Sidebar />
+    </div>
+
     <div class="mx-auto max-w-7xl px-4 flex gap-8">
       <aside class="hidden md:block w-60 shrink-0 py-8 sticky top-14 self-start max-h-[calc(100vh-3.5rem)] overflow-y-auto thin-scroll">
         <Sidebar />
@@ -65,6 +100,30 @@ const { title, description = "A free, interactive course for learning the Lua pr
         <slot />
       </main>
     </div>
+
+    <script is:inline>
+      (function () {
+        const toggle = document.getElementById("mobile-menu-toggle");
+        const close = document.getElementById("mobile-menu-close");
+        const backdrop = document.getElementById("mobile-menu-backdrop");
+        const panel = document.getElementById("mobile-menu-panel");
+
+        function openMenu() {
+          backdrop.classList.remove("hidden");
+          panel.classList.remove("hidden");
+          document.body.classList.add("overflow-hidden");
+        }
+        function closeMenu() {
+          backdrop.classList.add("hidden");
+          panel.classList.add("hidden");
+          document.body.classList.remove("overflow-hidden");
+        }
+
+        toggle?.addEventListener("click", openMenu);
+        close?.addEventListener("click", closeMenu);
+        backdrop?.addEventListener("click", closeMenu);
+      })();
+    </script>
 
     <footer class="border-t border-stone-300/60 dark:border-stone-800 mt-16">
       <div class="mx-auto max-w-7xl px-4 py-8 text-sm text-stone-500 dark:text-stone-400">

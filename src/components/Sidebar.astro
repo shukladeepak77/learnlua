@@ -76,7 +76,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "");
     try {
       const completed = JSON.parse(localStorage.getItem("lua-course-progress") || "[]");
       completed.forEach((id) => {
-        document.querySelector(`[data-lesson-check="${id}"]`)?.classList.remove("hidden");
+        document.querySelectorAll(`[data-lesson-check="${id}"]`).forEach((el) => el.classList.remove("hidden"));
       });
     } catch {
       // ignore malformed localStorage state
