@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { bubbleStyle } from "../lib/palette";
 
 const lessons = (await getCollection("lessons")).sort((a, b) => a.data.order - b.data.order);
 const currentPath = Astro.url.pathname.replace(/\/$/, "");
@@ -8,13 +9,13 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "");
   <a
     href="/"
     class={`block rounded-md px-3 py-2 font-medium transition-colors ${
-      currentPath === "" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+      currentPath === "" ? "bg-brand/10 text-brand-dark dark:bg-brand/15 dark:text-brand-light" : "text-stone-600 dark:text-stone-300 hover:bg-stone-200/60 dark:hover:bg-stone-800"
     }`}
   >
     Home
   </a>
 
-  <p class="px-3 mt-5 mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+  <p class="px-3 mt-5 mb-1 text-xs font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">
     Lessons
   </p>
   <ul class="space-y-0.5">
@@ -26,22 +27,27 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "");
           <a
             href={href}
             data-lesson-link={lesson.id}
-            class={`flex items-center gap-2 rounded-md px-3 py-2 transition-colors ${
+            class={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 transition-colors ${
               active
-                ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-medium"
-                : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? "bg-brand/10 text-brand-dark dark:bg-brand/15 dark:text-brand-light font-medium"
+                : "text-stone-600 dark:text-stone-300 hover:bg-stone-200/60 dark:hover:bg-stone-800"
             }`}
           >
-            <span class="text-slate-400 dark:text-slate-600 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+            <span
+              class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white shadow-sm"
+              style={bubbleStyle(i)}
+            >
+              {i + 1}
+            </span>
             <span class="flex-1">{lesson.data.title}</span>
-            <span data-lesson-check={lesson.id} class="hidden text-emerald-500 text-xs">✓</span>
+            <span data-lesson-check={lesson.id} class="hidden text-brand dark:text-brand-light text-xs">✓</span>
           </a>
         </li>
       );
     })}
   </ul>
 
-  <p class="px-3 mt-5 mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+  <p class="px-3 mt-5 mb-1 text-xs font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500">
     Reference
   </p>
   <ul class="space-y-0.5">
@@ -49,7 +55,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "");
       <a
         href="/cheatsheet"
         class={`block rounded-md px-3 py-2 transition-colors ${
-          currentPath === "/cheatsheet" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          currentPath === "/cheatsheet" ? "bg-brand/10 text-brand-dark dark:bg-brand/15 dark:text-brand-light font-medium" : "text-stone-600 dark:text-stone-300 hover:bg-stone-200/60 dark:hover:bg-stone-800"
         }`}
       >
         Cheatsheet
@@ -59,7 +65,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "");
       <a
         href="/about"
         class={`block rounded-md px-3 py-2 transition-colors ${
-          currentPath === "/about" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          currentPath === "/about" ? "bg-brand/10 text-brand-dark dark:bg-brand/15 dark:text-brand-light font-medium" : "text-stone-600 dark:text-stone-300 hover:bg-stone-200/60 dark:hover:bg-stone-800"
         }`}
       >
         About Lua

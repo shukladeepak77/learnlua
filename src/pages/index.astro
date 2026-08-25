@@ -1,17 +1,18 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { bubbleStyle } from "../lib/palette";
 
 const lessons = (await getCollection("lessons")).sort((a, b) => a.data.order - b.data.order);
 const firstLesson = lessons[0];
 ---
 <BaseLayout title="Learn Lua — A Free Interactive Course">
   <section class="max-w-3xl">
-    <p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-3">Free & interactive</p>
-    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-5">
+    <p class="text-sm font-semibold text-brand dark:text-brand-light mb-3">Free & interactive</p>
+    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-stone-900 dark:text-white mb-5">
       Learn Lua, right in your browser.
     </h1>
-    <p class="text-lg text-slate-600 dark:text-slate-300 leading-8 mb-8">
+    <p class="text-lg text-stone-600 dark:text-stone-300 leading-8 mb-8">
       A hands-on course for the small, fast scripting language behind Roblox, Neovim, World of
       Warcraft addons, and countless embedded systems. Every example is a real, runnable Lua
       interpreter — no installs, no sign-up, no server round-trips.
@@ -19,13 +20,14 @@ const firstLesson = lessons[0];
     <div class="flex flex-wrap gap-3">
       <a
         href={`/lessons/${firstLesson.id}`}
-        class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-500 transition-colors"
+        class="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-white shadow-sm hover:brightness-110 transition-[filter]"
+        style="background-image: linear-gradient(135deg, #e8672f 0%, #c1440e 100%);"
       >
         Start Learning →
       </a>
       <a
         href="/cheatsheet"
-        class="inline-flex items-center gap-2 rounded-md border border-slate-300 dark:border-slate-700 px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        class="inline-flex items-center gap-2 rounded-md border border-stone-300 dark:border-stone-700 px-5 py-3 text-sm font-semibold text-stone-700 dark:text-stone-200 hover:bg-stone-200/50 dark:hover:bg-stone-800 transition-colors"
       >
         View Cheatsheet
       </a>
@@ -38,29 +40,32 @@ const firstLesson = lessons[0];
       { title: "13 focused lessons", body: "From variables to metatables and coroutines, building toward a real capstone project." },
       { title: "Track your progress", body: "Mark lessons complete as you go — saved locally, no account needed." },
     ].map((f) => (
-      <div class="rounded-lg border border-slate-200 dark:border-slate-800 p-5">
-        <h3 class="font-semibold text-slate-900 dark:text-slate-100 mb-1.5">{f.title}</h3>
-        <p class="text-sm text-slate-600 dark:text-slate-400 leading-6">{f.body}</p>
+      <div class="rounded-lg border border-stone-300/60 dark:border-stone-800 bg-white/40 dark:bg-stone-900/40 p-5">
+        <h3 class="font-semibold text-stone-900 dark:text-stone-100 mb-1.5">{f.title}</h3>
+        <p class="text-sm text-stone-600 dark:text-stone-400 leading-6">{f.body}</p>
       </div>
     ))}
   </section>
 
   <section class="mt-16 max-w-3xl">
-    <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">Course outline</h2>
+    <h2 class="text-xl font-semibold text-stone-900 dark:text-stone-100 mb-4">Course outline</h2>
     <ol class="space-y-1.5">
       {lessons.map((lesson, i) => (
         <li>
           <a
             href={`/lessons/${lesson.id}`}
-            class="group flex items-baseline gap-3 rounded-md px-3 py-2 -mx-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            class="group flex items-center gap-3 rounded-md px-3 py-2 -mx-3 hover:bg-stone-200/50 dark:hover:bg-stone-800 transition-colors"
           >
-            <span class="text-sm tabular-nums text-slate-400 dark:text-slate-600 w-6 shrink-0">
-              {String(i + 1).padStart(2, "0")}
+            <span
+              class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-sm"
+              style={bubbleStyle(i)}
+            >
+              {i + 1}
             </span>
-            <span class="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+            <span class="text-stone-800 dark:text-stone-200 font-medium group-hover:text-brand dark:group-hover:text-brand-light">
               {lesson.data.title}
             </span>
-            <span class="text-sm text-slate-400 dark:text-slate-500 hidden sm:inline">
+            <span class="text-sm text-stone-400 dark:text-stone-500 hidden sm:inline">
               — {lesson.data.description}
             </span>
           </a>

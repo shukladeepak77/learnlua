@@ -2,6 +2,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-brand: #c1440e;
+  --color-brand-dark: #8a390f;
+  --color-brand-light: #e8672f;
+}
+
 :root {
   color-scheme: light;
 }
@@ -11,7 +17,18 @@ html.dark {
 }
 
 body {
-  @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  @apply text-stone-900 dark:text-stone-100;
+  background-color: #f3ede1;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(201, 154, 58, 0.16) 0%, transparent 34%),
+    radial-gradient(circle at 100% 100%, rgba(193, 68, 14, 0.16) 0%, transparent 42%);
+}
+
+html.dark body {
+  background-color: #1c130d;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(201, 154, 58, 0.14) 0%, transparent 34%),
+    radial-gradient(circle at 100% 100%, rgba(193, 68, 14, 0.18) 0%, transparent 42%);
 }
 
 /* Prose styling for lesson content rendered from MDX */
@@ -19,34 +36,34 @@ body {
   @apply text-3xl font-bold mt-2 mb-4 tracking-tight;
 }
 .lesson-content h2 {
-  @apply text-2xl font-semibold mt-10 mb-4 tracking-tight border-b border-slate-200 dark:border-slate-800 pb-2;
+  @apply text-2xl font-semibold mt-10 mb-4 tracking-tight border-b border-stone-300/60 dark:border-stone-700/60 pb-2;
 }
 .lesson-content h3 {
   @apply text-lg font-semibold mt-6 mb-2;
 }
 .lesson-content p {
-  @apply leading-7 mb-4 text-slate-700 dark:text-slate-300;
+  @apply leading-7 mb-4 text-stone-700 dark:text-stone-300;
 }
 .lesson-content ul {
-  @apply list-disc pl-6 mb-4 space-y-1 text-slate-700 dark:text-slate-300;
+  @apply list-disc pl-6 mb-4 space-y-1 text-stone-700 dark:text-stone-300;
 }
 .lesson-content ol {
-  @apply list-decimal pl-6 mb-4 space-y-1 text-slate-700 dark:text-slate-300;
+  @apply list-decimal pl-6 mb-4 space-y-1 text-stone-700 dark:text-stone-300;
 }
 .lesson-content a {
-  @apply text-emerald-600 dark:text-emerald-400 underline underline-offset-2 hover:text-emerald-500;
+  @apply text-brand dark:text-brand-light underline underline-offset-2 hover:text-brand-dark dark:hover:text-brand;
 }
 .lesson-content blockquote {
-  @apply border-l-4 border-emerald-500/60 pl-4 italic text-slate-600 dark:text-slate-400 my-4;
+  @apply border-l-4 border-brand/60 pl-4 italic text-stone-600 dark:text-stone-400 my-4;
 }
 .lesson-content code:not(pre code) {
-  @apply px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 text-[0.85em] font-mono;
+  @apply px-1.5 py-0.5 rounded bg-stone-200/70 dark:bg-stone-800 text-brand dark:text-brand-light text-[0.85em] font-mono;
 }
 .lesson-content pre {
-  @apply rounded-lg bg-slate-900 text-slate-100 p-4 overflow-x-auto mb-6 text-sm;
+  @apply rounded-lg bg-stone-900 text-stone-100 p-4 overflow-x-auto mb-6 text-sm;
 }
 .lesson-content strong {
-  @apply font-semibold text-slate-900 dark:text-slate-100;
+  @apply font-semibold text-stone-900 dark:text-stone-100;
 }
 
 /* Scrollbar tidy-up for code areas */
@@ -55,5 +72,5 @@ body {
   width: 8px;
 }
 .thin-scroll::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+  @apply bg-stone-300 dark:bg-stone-700 rounded-full;
 }

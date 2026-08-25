@@ -86,14 +86,14 @@ export default function LuaPlayground({ code: initialCode, height = 160 }: Props
   }, [initialCode]);
 
   return (
-    <div className="my-6 rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden not-prose">
-      <div className="flex items-center justify-between bg-slate-100 dark:bg-slate-900 px-3 py-1.5 border-b border-slate-200 dark:border-slate-800">
-        <span className="text-xs font-mono text-slate-500 dark:text-slate-400">Lua Playground</span>
+    <div className="my-6 rounded-lg border border-stone-300/60 dark:border-stone-800 overflow-hidden not-prose">
+      <div className="flex items-center justify-between bg-stone-200/60 dark:bg-stone-900 px-3 py-1.5 border-b border-stone-300/60 dark:border-stone-800">
+        <span className="text-xs font-mono text-stone-500 dark:text-stone-400">Lua Playground</span>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={reset}
-            className="text-xs px-2 py-1 rounded text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+            className="text-xs px-2 py-1 rounded text-stone-600 dark:text-stone-300 hover:bg-stone-300/50 dark:hover:bg-stone-800 transition-colors"
           >
             Reset
           </button>
@@ -101,7 +101,8 @@ export default function LuaPlayground({ code: initialCode, height = 160 }: Props
             type="button"
             onClick={run}
             disabled={status === "running"}
-            className="text-xs px-3 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-500 disabled:opacity-60 transition-colors font-medium"
+            className="text-xs px-3 py-1 rounded text-white disabled:opacity-60 hover:brightness-110 transition-[filter] font-medium"
+            style={{ backgroundImage: "linear-gradient(135deg, #e8672f 0%, #c1440e 100%)" }}
           >
             {status === "running" ? "Running…" : "▶ Run"}
           </button>
@@ -114,19 +115,19 @@ export default function LuaPlayground({ code: initialCode, height = 160 }: Props
         onChange={(e) => setCode(e.target.value)}
         spellCheck={false}
         style={{ height }}
-        className="w-full resize-y bg-slate-950 text-slate-100 font-mono text-sm p-3 outline-none thin-scroll"
+        className="w-full resize-y bg-stone-950 text-stone-100 font-mono text-sm p-3 outline-none thin-scroll"
       />
 
       {(output || status === "running") && (
-        <div className="border-t border-slate-200 dark:border-slate-800">
-          <div className="px-3 py-1 text-xs font-mono text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50">
+        <div className="border-t border-stone-300/60 dark:border-stone-800">
+          <div className="px-3 py-1 text-xs font-mono text-stone-500 dark:text-stone-400 bg-stone-100/60 dark:bg-stone-900/50">
             Output
           </div>
           <pre
             className={`px-3 py-2 text-sm font-mono whitespace-pre-wrap thin-scroll overflow-x-auto ${
               status === "error"
                 ? "text-red-500 dark:text-red-400"
-                : "text-slate-800 dark:text-slate-200"
+                : "text-stone-800 dark:text-stone-200"
             }`}
           >
             {status === "running" ? "Running…" : output}

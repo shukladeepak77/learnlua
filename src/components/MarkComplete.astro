@@ -6,12 +6,12 @@ interface Props {
 }
 const { lessonId, nextHref, nextTitle } = Astro.props;
 ---
-<div class="mt-10 flex items-center justify-between gap-4 border-t border-slate-200 dark:border-slate-800 pt-6">
+<div class="mt-10 flex items-center justify-between gap-4 border-t border-stone-300/60 dark:border-stone-800 pt-6">
   <button
     id="mark-complete-btn"
     type="button"
     data-lesson-id={lessonId}
-    class="inline-flex items-center gap-2 rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+    class="inline-flex items-center gap-2 rounded-md border border-stone-300 dark:border-stone-700 px-4 py-2 text-sm font-medium text-stone-700 dark:text-stone-200 hover:bg-stone-200/50 dark:hover:bg-stone-800 transition-colors"
   >
     <span id="mark-complete-icon">○</span>
     <span id="mark-complete-label">Mark as complete</span>
@@ -20,7 +20,8 @@ const { lessonId, nextHref, nextTitle } = Astro.props;
   {nextHref && (
     <a
       href={nextHref}
-      class="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
+      class="inline-flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm hover:brightness-110 transition-[filter]"
+      style="background-image: linear-gradient(135deg, #e8672f 0%, #c1440e 100%);"
     >
       Next: {nextTitle} →
     </a>
@@ -48,8 +49,8 @@ const { lessonId, nextHref, nextTitle } = Astro.props;
       const done = getProgress().includes(id);
       if (icon) icon.textContent = done ? "✓" : "○";
       if (label) label.textContent = done ? "Completed" : "Mark as complete";
-      btn.classList.toggle("border-emerald-500", done);
-      btn.classList.toggle("text-emerald-600", done);
+      btn.classList.toggle("border-brand", done);
+      btn.classList.toggle("text-brand", done);
     }
 
     btn.addEventListener("click", () => {
