@@ -8,9 +8,10 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "");
 <nav class="text-sm">
   <a
     href="/"
-    class={`block rounded-md px-3 py-2 font-medium transition-colors ${
-      currentPath === "" ? "bg-brand/10 text-brand-dark dark:bg-brand/15 dark:text-brand-light" : "text-stone-600 dark:text-stone-300 hover:bg-stone-200/60 dark:hover:bg-stone-800"
+    class={`block rounded-xl px-3 py-2 text-white font-medium shadow-sm transition-all hover:brightness-110 hover:shadow-md ${
+      currentPath === "" ? "ring-2 ring-white/80 dark:ring-white/50" : ""
     }`}
+    style="background-image: linear-gradient(135deg, #e8672f 0%, #c1440e 100%);"
   >
     Home
   </a>
