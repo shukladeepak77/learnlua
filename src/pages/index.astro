@@ -39,10 +39,10 @@ const firstLesson = lessons[0];
       { title: "Runs in your browser", body: "Powered by Fengari, a Lua VM compiled to JS. Nothing installed, nothing sent to a server." },
       { title: "13 focused lessons", body: "From variables to metatables and coroutines, building toward a real capstone project." },
       { title: "Track your progress", body: "Mark lessons complete as you go — saved locally, no account needed." },
-    ].map((f) => (
-      <div class="rounded-lg border border-stone-300/60 dark:border-stone-800 bg-white/40 dark:bg-stone-900/40 p-5">
-        <h3 class="font-semibold text-stone-900 dark:text-stone-100 mb-1.5">{f.title}</h3>
-        <p class="text-sm text-stone-600 dark:text-stone-400 leading-6">{f.body}</p>
+    ].map((f, i) => (
+      <div class="rounded-2xl p-5 text-white shadow-sm" style={bubbleStyle(i * 3)}>
+        <h3 class="font-semibold mb-1.5">{f.title}</h3>
+        <p class="text-sm text-white/80 leading-6">{f.body}</p>
       </div>
     ))}
   </section>
