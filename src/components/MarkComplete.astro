@@ -1,0 +1,66 @@
+---
+interface Props {
+  lessonId: string;
+  nextHref?: string;
+  nextTitle?: string;
+}
+const { lessonId, nextHref, nextTitle } = Astro.props;
+---
+<div class="mt-10 flex items-center justify-between gap-4 border-t border-slate-200 dark:border-slate-800 pt-6">
+  <button
+    id="mark-complete-btn"
+    type="button"
+    data-lesson-id={lessonId}
+    class="inline-flex items-center gap-2 rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+  >
+    <span id="mark-complete-icon">○</span>
+    <span id="mark-complete-label">Mark as complete</span>
+  </button>
+
+  {nextHref && (
+    <a
+      href={nextHref}
+      class="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
+    >
+      Next: {nextTitle} →
+    </a>
+  )}
+</div>
+
+<script is:inline>
+  (function () {
+    const KEY = "lua-course-progress";
+    const btn = document.getElementById("mark-complete-btn");
+    if (!btn) return;
+    const id = btn.getAttribute("data-lesson-id");
+    const icon = document.getElementById("mark-complete-icon");
+    const label = document.getElementById("mark-complete-label");
+
+    function getProgress() {
+      try {
+        return JSON.parse(localStorage.getItem(KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function render() {
+      const done = getProgress().includes(id);
+      if (icon) icon.textContent = done ? "✓" : "○";
+      if (label) label.textContent = done ? "Completed" : "Mark as complete";
+      btn.classList.toggle("border-emerald-500", done);
+      btn.classList.toggle("text-emerald-600", done);
+    }
+
+    btn.addEventListener("click", () => {
+      const progress = getProgress();
+      const idx = progress.indexOf(id);
+      if (idx === -1) progress.push(id);
+      else progress.splice(idx, 1);
+      localStorage.setItem(KEY, JSON.stringify(progress));
+      render();
+    });
+
+    render();
+  })();
+</script>

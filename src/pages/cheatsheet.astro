@@ -1,0 +1,134 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+interface Entry { code: string; note: string }
+interface Section { title: string; entries: Entry[] }
+
+const sections: Section[] = [
+  {
+    title: "Variables & Types",
+    entries: [
+      { code: `local x = 10`, note: "Local variable (always prefer this)" },
+      { code: `x = 10`, note: "Global variable (avoid)" },
+      { code: `type(x)`, note: `"nil" | "boolean" | "number" | "string" | "function" | "table"` },
+      { code: `nil, false`, note: "The only two falsy values — 0 and \"\" are truthy!" },
+    ],
+  },
+  {
+    title: "Operators",
+    entries: [
+      { code: `+  -  *  /`, note: "Arithmetic; / always returns a float" },
+      { code: `//`, note: "Floor division" },
+      { code: `%`, note: "Modulo" },
+      { code: `^`, note: "Exponent" },
+      { code: `==  ~=`, note: "Equal / not equal (not != )" },
+      { code: `and  or  not`, note: "Logical operators" },
+      { code: `..`, note: "String concatenation" },
+      { code: `#t`, note: "Length of a table/string" },
+    ],
+  },
+  {
+    title: "Strings",
+    entries: [
+      { code: `s:upper() / s:lower()`, note: "Case conversion" },
+      { code: `s:sub(i, j)`, note: "Substring, 1-based & inclusive" },
+      { code: `s:find(pattern)`, note: "Returns start, end positions" },
+      { code: `s:match(pattern)`, note: "Returns first captured match" },
+      { code: `s:gsub(pattern, repl)`, note: "Replace all matches" },
+      { code: `s:gmatch(pattern)`, note: "Iterator over all matches" },
+      { code: `string.format("%s: %d", a, b)`, note: "printf-style formatting" },
+      { code: `tostring(x) / tonumber(x)`, note: "Type conversion" },
+    ],
+  },
+  {
+    title: "Control Flow",
+    entries: [
+      { code: `if x then ... elseif y then ... else ... end`, note: "Conditionals" },
+      { code: `while x do ... end`, note: "Pre-condition loop" },
+      { code: `repeat ... until x`, note: "Post-condition loop (runs at least once)" },
+      { code: `for i = 1, 10, 2 do ... end`, note: "Numeric for (start, stop, step)" },
+      { code: `for k, v in pairs(t) do ... end`, note: "Iterate all key/value pairs" },
+      { code: `for i, v in ipairs(t) do ... end`, note: "Iterate array part, in order" },
+      { code: `break`, note: "Exit nearest loop (no continue keyword)" },
+    ],
+  },
+  {
+    title: "Tables",
+    entries: [
+      { code: `local t = {1, 2, 3}`, note: "Array-style table (1-indexed!)" },
+      { code: `local t = {x = 1, y = 2}`, note: "Dictionary-style table" },
+      { code: `t[1], t.x`, note: "Index by number / by dot syntax" },
+      { code: `table.insert(t, v)`, note: "Append (or table.insert(t, pos, v))" },
+      { code: `table.remove(t, pos)`, note: "Remove and return element" },
+      { code: `table.concat(t, ", ")`, note: "Join array elements into a string" },
+      { code: `table.sort(t)`, note: "Sort in place" },
+    ],
+  },
+  {
+    title: "Functions",
+    entries: [
+      { code: `local function f(a, b) return a + b end`, note: "Named function" },
+      { code: `local f = function(a, b) return a + b end`, note: "Equivalent anonymous form" },
+      { code: `return a, b`, note: "Multiple return values" },
+      { code: `function(...) local args = {...} end`, note: "Varargs" },
+      { code: `function obj:method() ... end`, note: "Sugar for function obj.method(self)" },
+      { code: `obj:method()`, note: "Sugar for obj.method(obj)" },
+    ],
+  },
+  {
+    title: "Metatables & OOP",
+    entries: [
+      { code: `setmetatable(t, mt)`, note: "Attach a metatable to a table" },
+      { code: `mt.__index = Class`, note: "Fallback lookup — basis of OOP inheritance" },
+      { code: `mt.__add / __eq / __tostring`, note: "Operator & tostring overloading" },
+      { code: `Class.new = function() return setmetatable({}, Class) end`, note: "Common constructor pattern" },
+    ],
+  },
+  {
+    title: "Coroutines",
+    entries: [
+      { code: `coroutine.create(fn)`, note: "Create a coroutine from a function" },
+      { code: `coroutine.resume(co, ...)`, note: "Start/continue; returns ok, ...values" },
+      { code: `coroutine.yield(...)`, note: "Pause and return values to resume()" },
+      { code: `coroutine.wrap(fn)`, note: "Like create, but returns a plain callable function" },
+      { code: `coroutine.status(co)`, note: `"suspended" | "running" | "dead"` },
+    ],
+  },
+  {
+    title: "Error Handling",
+    entries: [
+      { code: `error("message")`, note: "Raise an error" },
+      { code: `pcall(fn, ...)`, note: "Call safely; returns ok, result/err" },
+      { code: `assert(value, "message")`, note: "Error if value is falsy, else returns it" },
+    ],
+  },
+];
+---
+<BaseLayout title="Cheatsheet" description="A quick-reference syntax cheatsheet for the Lua programming language.">
+  <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">Lua Cheatsheet</h1>
+  <p class="text-slate-600 dark:text-slate-400 mb-10">A quick syntax reference for everything covered in this course.</p>
+
+  <div class="space-y-10 max-w-4xl">
+    {sections.map((section) => (
+      <section>
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+          {section.title}
+        </h2>
+        <div class="overflow-x-auto thin-scroll rounded-lg border border-slate-200 dark:border-slate-800">
+          <table class="w-full text-sm">
+            <tbody>
+              {section.entries.map((entry, i) => (
+                <tr class={i % 2 === 0 ? "bg-slate-50 dark:bg-slate-900/40" : ""}>
+                  <td class="px-4 py-2.5 font-mono text-emerald-700 dark:text-emerald-400 whitespace-nowrap align-top">
+                    {entry.code}
+                  </td>
+                  <td class="px-4 py-2.5 text-slate-600 dark:text-slate-400 align-top">{entry.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

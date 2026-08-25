@@ -1,0 +1,82 @@
+---
+import { getCollection } from "astro:content";
+
+const lessons = (await getCollection("lessons")).sort((a, b) => a.data.order - b.data.order);
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
+---
+<nav class="text-sm">
+  <a
+    href="/"
+    class={`block rounded-md px-3 py-2 font-medium transition-colors ${
+      currentPath === "" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+    }`}
+  >
+    Home
+  </a>
+
+  <p class="px-3 mt-5 mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+    Lessons
+  </p>
+  <ul class="space-y-0.5">
+    {lessons.map((lesson, i) => {
+      const href = `/lessons/${lesson.id}`;
+      const active = currentPath === href;
+      return (
+        <li>
+          <a
+            href={href}
+            data-lesson-link={lesson.id}
+            class={`flex items-center gap-2 rounded-md px-3 py-2 transition-colors ${
+              active
+                ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-medium"
+                : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+            }`}
+          >
+            <span class="text-slate-400 dark:text-slate-600 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+            <span class="flex-1">{lesson.data.title}</span>
+            <span data-lesson-check={lesson.id} class="hidden text-emerald-500 text-xs">✓</span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+
+  <p class="px-3 mt-5 mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+    Reference
+  </p>
+  <ul class="space-y-0.5">
+    <li>
+      <a
+        href="/cheatsheet"
+        class={`block rounded-md px-3 py-2 transition-colors ${
+          currentPath === "/cheatsheet" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+        }`}
+      >
+        Cheatsheet
+      </a>
+    </li>
+    <li>
+      <a
+        href="/about"
+        class={`block rounded-md px-3 py-2 transition-colors ${
+          currentPath === "/about" ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+        }`}
+      >
+        About Lua
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<script is:inline>
+  (function () {
+    try {
+      const completed = JSON.parse(localStorage.getItem("lua-course-progress") || "[]");
+      completed.forEach((id) => {
+        document.querySelector(`[data-lesson-check="${id}"]`)?.classList.remove("hidden");
+      });
+    } catch {
+      // ignore malformed localStorage state
+    }
+  })();
+</script>

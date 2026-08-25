@@ -1,0 +1,119 @@
+---
+title: "Metatables & OOP"
+description: "How Lua builds object-oriented programming and operator overloading on top of tables."
+order: 9
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+Lua has no built-in `class` keyword. Instead, it gives you **metatables**: a table of "hooks" that customize how another table behaves — what happens when you index a missing key, add two tables together, print one, and so on. Everything from OOP to operator overloading is built from this one mechanism.
+
+## The __index hook: the basis of OOP
+
+The most important metamethod is `__index`. When you look up a key that doesn't exist on a table, Lua checks the table's metatable for `__index` and, if set to another table, looks there instead:
+
+<LuaPlayground client:load code={`local Animal = { sound = "..." }
+
+function Animal:speak()
+  print(self.name .. " says " .. self.sound)
+end
+
+local dog = setmetatable({ name = "Rex", sound = "Woof" }, { __index = Animal })
+
+dog:speak()  -- "Rex says Woof"`} />
+
+Two things to unpack here:
+
+1. `setmetatable(table, metatable)` attaches a metatable to a table.
+2. `function Animal:speak()` and `dog:speak()` use **colon syntax** — sugar for passing the table itself as a hidden first argument called `self`. `dog:speak()` is exactly equivalent to `dog.speak(dog)`.
+
+## Building a "class" pattern
+
+The idiomatic Lua OOP pattern combines `__index` with a constructor function:
+
+<LuaPlayground client:load code={`local Animal = {}
+Animal.__index = Animal  -- the table is its own metatable's __index
+
+function Animal.new(name, sound)
+  local self = setmetatable({}, Animal)
+  self.name = name
+  self.sound = sound
+  return self
+end
+
+function Animal:speak()
+  print(self.name .. " says " .. self.sound)
+end
+
+local dog = Animal.new("Rex", "Woof")
+local cat = Animal.new("Tom", "Meow")
+
+dog:speak()
+cat:speak()`} />
+
+This is the pattern you'll see across the vast majority of Lua codebases — including most Roblox and LÖVE2D game code.
+
+## Inheritance
+
+Since `__index` can point at *any* table, including another class-like table, you can chain them to build inheritance:
+
+<LuaPlayground client:load code={`local Animal = {}
+Animal.__index = Animal
+
+function Animal.new(name)
+  return setmetatable({ name = name }, Animal)
+end
+
+function Animal:speak()
+  print(self.name .. " makes a sound")
+end
+
+-- Dog "inherits" from Animal
+local Dog = setmetatable({}, { __index = Animal })
+Dog.__index = Dog
+
+function Dog.new(name)
+  local self = Animal.new(name)
+  return setmetatable(self, Dog)
+end
+
+function Dog:speak()  -- overrides Animal:speak
+  print(self.name .. " barks")
+end
+
+local generic = Animal.new("Creature")
+local rex = Dog.new("Rex")
+
+generic:speak()  -- "Creature makes a sound"
+rex:speak()      -- "Rex barks" (overridden)`} />
+
+## Operator overloading
+
+Metatables also let you define what `+`, `==`, `tostring()`, and other operators do for your own tables, via metamethods like `__add`, `__eq`, and `__tostring`:
+
+<LuaPlayground client:load code={`local Vector = {}
+Vector.__index = Vector
+
+function Vector.new(x, y)
+  return setmetatable({ x = x, y = y }, Vector)
+end
+
+Vector.__add = function(a, b)
+  return Vector.new(a.x + b.x, a.y + b.y)
+end
+
+Vector.__tostring = function(v)
+  return "(" .. v.x .. ", " .. v.y .. ")"
+end
+
+local a = Vector.new(1, 2)
+local b = Vector.new(3, 4)
+local c = a + b  -- calls __add
+
+print(tostring(c))  -- calls __tostring -> "(4, 6)"`} />
+
+## Try it yourself
+
+Build a `Counter` class with `Counter.new(start)`, `counter:increment()`, and `counter:value()`. Create two independent counters and prove they don't share state.
+
+<LuaPlayground client:load height={220} code={`-- your code here
+`} />

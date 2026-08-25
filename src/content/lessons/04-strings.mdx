@@ -1,0 +1,80 @@
+---
+title: "Strings"
+description: "Creating, combining, and manipulating text with Lua's string library."
+order: 4
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+Strings in Lua are immutable byte sequences. You can write them with single quotes, double quotes, or `[[...]]` for multi-line strings.
+
+<LuaPlayground client:load code={`local a = "double quotes"
+local b = 'single quotes'
+local c = [[
+multi-line
+strings look
+like this
+]]
+print(a)
+print(b)
+print(c)`} />
+
+## Common string functions
+
+Lua's string library is accessed either as `string.func(s, ...)` or with the more readable method syntax `s:func(...)` — they're equivalent.
+
+<LuaPlayground client:load code={`local s = "Hello, Lua!"
+
+print(#s)                  -- length (the # operator)
+print(string.upper(s))     -- HELLO, LUA!
+print(s:lower())           -- hello, lua! (method syntax)
+print(s:sub(1, 5))         -- "Hello" (substring, 1-based & inclusive)
+print(s:find("Lua"))       -- 8  10  (start, end positions)
+print(s:rep(2))            -- repeats the string
+print(s:len())              -- same as #s`} />
+
+## Formatting strings
+
+`string.format` works like `printf` in C — very handy for building strings with variables:
+
+<LuaPlayground client:load code={`local name = "Ada"
+local score = 97.456
+
+print(string.format("%s scored %.1f%%", name, score))
+print(string.format("%05d", 42))`} />
+
+## Converting between strings and numbers
+
+<LuaPlayground client:load code={`print(tonumber("42") + 8)
+print(tostring(42) .. "!")
+
+-- invalid conversions return nil, not an error
+print(tonumber("not a number"))`} />
+
+## Pattern matching (Lua's mini regex)
+
+Lua doesn't use full regular expressions — instead it has its own lighter "patterns" system, used by `find`, `match`, `gmatch`, and `gsub`:
+
+<LuaPlayground client:load code={`local sentence = "The year is 2026"
+
+-- match: pull out the first match of a pattern
+print(sentence:match("%d+"))       -- one or more digits -> "2026"
+
+-- gsub: substitute matches
+local censored = sentence:gsub("%d+", "____")
+print(censored)
+
+-- gmatch: iterate over every match
+for word in sentence:gmatch("%a+") do
+  io.write(word, " | ")
+end
+print()`} />
+
+Common pattern classes: `%a` (letters), `%d` (digits), `%s` (whitespace), `%w` (alphanumeric), `%p` (punctuation) — uppercase versions match the complement (e.g. `%D` = not a digit). `+` means "one or more", `*` means "zero or more".
+
+## Try it yourself
+
+Given `local sentence = "Lua was created in 1993 in Brazil"`, use `gsub` to replace the year with the current year.
+
+<LuaPlayground client:load height={140} code={`local sentence = "Lua was created in 1993 in Brazil"
+-- your code here
+`} />

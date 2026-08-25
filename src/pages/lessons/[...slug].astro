@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import MarkComplete from "../../components/MarkComplete.astro";
+
+export async function getStaticPaths() {
+  const lessons = await getCollection("lessons");
+  return lessons.map((lesson) => ({
+    params: { slug: lesson.id },
+    props: { lesson },
+  }));
+}
+
+const { lesson } = Astro.props;
+const { Content } = await render(lesson);
+
+const allLessons = (await getCollection("lessons")).sort((a, b) => a.data.order - b.data.order);
+const index = allLessons.findIndex((l) => l.id === lesson.id);
+const prev = index > 0 ? allLessons[index - 1] : undefined;
+const next = index < allLessons.length - 1 ? allLessons[index + 1] : undefined;
+---
+<BaseLayout title={lesson.data.title} description={lesson.data.description}>
+  <div class="mb-2 text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+    Lesson {index + 1} of {allLessons.length}
+  </div>
+
+  <article class="lesson-content max-w-3xl">
+    <Content />
+  </article>
+
+  {prev && (
+    <a href={`/lessons/${prev.id}`} class="inline-block mt-4 text-sm text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+      ← {prev.data.title}
+    </a>
+  )}
+
+  <MarkComplete
+    lessonId={lesson.id}
+    nextHref={next ? `/lessons/${next.id}` : undefined}
+    nextTitle={next?.data.title}
+  />
+</BaseLayout>

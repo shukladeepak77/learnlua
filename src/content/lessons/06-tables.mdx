@@ -1,0 +1,93 @@
+---
+title: "Tables"
+description: "Lua's single, powerful data structure — arrays, dictionaries, and everything in between."
+order: 6
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+Tables are the only data structure in Lua — and once you internalize them, you've understood most of the language. A table is an **associative array**: a set of key/value pairs, where keys and values can be almost any type.
+
+## Tables as arrays
+
+When you use consecutive integer keys starting at `1`, a table behaves like an array (remember, Lua is **1-indexed**):
+
+<LuaPlayground client:load code={`local fruits = {"apple", "banana", "cherry"}
+
+print(fruits[1])   -- "apple" (NOT index 0!)
+print(fruits[3])   -- "cherry"
+print(#fruits)     -- 3 (the length operator)
+
+fruits[4] = "date"
+print(#fruits)     -- 4`} />
+
+## Tables as dictionaries
+
+Any table can also map arbitrary keys to values:
+
+<LuaPlayground client:load code={`local person = {
+  name = "Ada",
+  age = 36,
+  ["favorite color"] = "blue",  -- keys with spaces need brackets
+}
+
+print(person.name)             -- dot syntax for string keys
+print(person["age"])           -- equivalent bracket syntax
+print(person["favorite color"])
+
+person.age = 37                -- update
+person.email = "ada@example.com"  -- add a new field
+print(person.age, person.email)`} />
+
+`person.name` is just sugar for `person["name"]` — identical operation, different syntax.
+
+## Iterating tables
+
+Use `ipairs` for array-style, ordered, integer-keyed data. Use `pairs` for everything, including mixed/dictionary-style tables (order is *not* guaranteed with `pairs`):
+
+<LuaPlayground client:load code={`local person = { name = "Ada", age = 36, job = "Mathematician" }
+
+for key, value in pairs(person) do
+  print(key, value)
+end`} />
+
+## Nested tables
+
+Tables can contain other tables, which is how you build more complex structures:
+
+<LuaPlayground client:load code={`local company = {
+  name = "Acme",
+  employees = {
+    { name = "Ada", role = "Engineer" },
+    { name = "Grace", role = "Manager" },
+  },
+}
+
+print(company.name)
+print(company.employees[1].name)
+print(company.employees[2].role)
+
+for _, employee in ipairs(company.employees) do
+  print(employee.name .. " is a " .. employee.role)
+end`} />
+
+## Useful table functions
+
+<LuaPlayground client:load code={`local nums = {5, 3, 8, 1}
+
+table.insert(nums, 10)        -- append to the end
+table.insert(nums, 1, 0)      -- insert 0 at position 1
+print(table.concat(nums, ", "))
+
+table.remove(nums, 1)         -- remove the first element
+print(table.concat(nums, ", "))
+
+table.sort(nums)
+print(table.concat(nums, ", "))`} />
+
+## Try it yourself
+
+Build a table representing a to-do list (an array of strings). Add two items with `table.insert`, remove the first one, then print the remaining items with a `for ... in ipairs` loop.
+
+<LuaPlayground client:load height={160} code={`local todos = {"Buy milk"}
+-- your code here
+`} />

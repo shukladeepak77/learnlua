@@ -1,0 +1,85 @@
+---
+title: "Error Handling"
+description: "Raising and catching errors with error, pcall, and xpcall."
+order: 12
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+## Raising errors
+
+`error()` stops execution and raises an error, similar to `throw` in other languages:
+
+<LuaPlayground client:load code={`local function divide(a, b)
+  if b == 0 then
+    error("cannot divide by zero")
+  end
+  return a / b
+end
+
+print(divide(10, 2))
+print(divide(10, 0))  -- this line raises an error and stops the script`} />
+
+Notice the script stopped entirely — an uncaught error halts execution, just like an uncaught exception elsewhere.
+
+## Catching errors with pcall
+
+`pcall` ("protected call") runs a function and catches any error it raises, instead of letting it crash the program. It returns `true` plus the function's results on success, or `false` plus the error message on failure:
+
+<LuaPlayground client:load code={`local function divide(a, b)
+  if b == 0 then
+    error("cannot divide by zero")
+  end
+  return a / b
+end
+
+local ok, result = pcall(divide, 10, 0)
+
+if ok then
+  print("Result:", result)
+else
+  print("Something went wrong:", result)
+end
+
+-- the script keeps running after a caught error
+print("still going")`} />
+
+This is the standard way to handle "this might fail" situations in Lua — there's no `try/catch` keyword; `pcall` *is* the try/catch.
+
+## Structured errors with tables
+
+`error()` isn't limited to strings — you can raise any value, which is handy for passing structured error information:
+
+<LuaPlayground client:load code={`local function withdraw(balance, amount)
+  if amount > balance then
+    error({ code = "INSUFFICIENT_FUNDS", requested = amount, available = balance })
+  end
+  return balance - amount
+end
+
+local ok, err = pcall(withdraw, 100, 250)
+
+if not ok then
+  print("Error code:", err.code)
+  print("Requested:", err.requested, "Available:", err.available)
+end`} />
+
+## assert: a shortcut for common checks
+
+`assert(value, message)` raises `message` as an error if `value` is falsy, otherwise it returns `value` unchanged. It's a compact way to guard against bad input:
+
+<LuaPlayground client:load code={`local function sqrt(n)
+  assert(n >= 0, "cannot take sqrt of a negative number")
+  return n ^ 0.5
+end
+
+print(sqrt(16))
+
+local ok, err = pcall(sqrt, -4)
+print(ok, err)`} />
+
+## Try it yourself
+
+Write a function `safeDivide(a, b)` that uses `pcall` internally and returns `0` (instead of crashing) if dividing by zero. Test it with both a valid and an invalid input.
+
+<LuaPlayground client:load height={180} code={`-- your code here
+`} />

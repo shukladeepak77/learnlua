@@ -1,0 +1,90 @@
+---
+title: "Variables, Types & Operators"
+description: "Lua's dynamic type system, variable declaration, and the core operators."
+order: 3
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+## Declaring variables
+
+Lua variables need no type declaration — just assign to a name:
+
+<LuaPlayground client:load code={`name = "Ada"
+age = 36
+print(name, age)`} />
+
+By default, that creates a **global** variable, which is almost never what you want (more on this in the Scope lesson). Almost all variables you write should use `local`:
+
+<LuaPlayground client:load code={`local name = "Ada"
+local age = 36
+print(name, age)`} />
+
+## The core types
+
+Lua has eight types, but you'll spend 95% of your time with these:
+
+| Type | Example | Notes |
+|---|---|---|
+| `nil` | `nil` | Absence of a value — Lua's `null`/`undefined` |
+| `boolean` | `true`, `false` | Only `nil` and `false` are "falsy"; `0` and `""` are truthy! |
+| `number` | `42`, `3.14` | Both integers and floats are the `number` type |
+| `string` | `"hi"`, `'hi'` | Immutable, single or double quotes both work |
+| `function` | `function() end` | First-class — can be stored, passed, returned |
+| `table` | `{}` | Lua's one and only data structure |
+
+You can check any value's type with `type()`:
+
+<LuaPlayground client:load code={`print(type(nil))
+print(type(true))
+print(type(42))
+print(type("hi"))
+print(type({}))
+print(type(print))`} />
+
+## Truthiness — the gotcha
+
+Coming from JavaScript or Python, this trips almost everyone up once: in Lua, **only `nil` and `false` are falsy**. Everything else — including `0` and `""` — is truthy.
+
+<LuaPlayground client:load code={`if 0 then
+  print("0 is truthy in Lua!")
+end
+
+if "" then
+  print("so is an empty string")
+end`} />
+
+## Arithmetic operators
+
+<LuaPlayground client:load code={`print(10 + 3)   -- addition
+print(10 - 3)   -- subtraction
+print(10 * 3)   -- multiplication
+print(10 / 3)   -- division (always returns a float)
+print(10 // 3)  -- floor division
+print(10 % 3)   -- modulo (remainder)
+print(10 ^ 2)   -- exponent`} />
+
+## Relational & logical operators
+
+<LuaPlayground client:load code={`print(3 == 3)     -- equality
+print(3 ~= 4)     -- inequality (note: ~=, not !=)
+print(3 < 4 and 4 < 5)
+print(3 > 4 or 4 > 3)
+print(not false)`} />
+
+## String concatenation
+
+Lua uses `..` (double dot) to join strings — not `+`:
+
+<LuaPlayground client:load code={`local first = "Ada"
+local last = "Lovelace"
+print(first .. " " .. last)
+
+-- numbers are automatically converted to strings
+print("Answer: " .. 42)`} />
+
+## Try it yourself
+
+Declare three local variables — your name, your age, and whether you're currently learning Lua (a boolean) — then print a sentence combining all three using `..`.
+
+<LuaPlayground client:load height={140} code={`-- your code here
+`} />

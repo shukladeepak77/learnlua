@@ -1,0 +1,81 @@
+---
+title: "Scope and local"
+description: "Why almost every variable you write should be local, and how block scoping works."
+order: 8
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+## Global by default — and why that's dangerous
+
+If you assign to a name without `local`, Lua creates a **global** variable, visible from anywhere in the program:
+
+<LuaPlayground client:load code={`function setName()
+  name = "Ada"  -- oops, no 'local' -- this is global!
+end
+
+setName()
+print(name)  -- accessible here too, even though it was "set" inside a function`} />
+
+This is rarely what you want. Globals make it easy to accidentally overwrite variables from unrelated parts of a program, they're slightly slower to access, and they make code harder to reason about. **Rule of thumb: always use `local` unless you have a specific reason not to.**
+
+<LuaPlayground client:load code={`local function setName()
+  local name = "Ada"  -- scoped to this function only
+  return name
+end
+
+print(setName())
+print(name)  -- nil -- 'name' doesn't exist out here`} />
+
+## Block scope
+
+`local` variables are scoped to the nearest enclosing block — `do...end`, `if...end`, loop bodies, and function bodies all count:
+
+<LuaPlayground client:load code={`do
+  local x = 10
+  print(x)  -- 10
+end
+
+print(x)  -- nil, 'x' doesn't exist outside its 'do' block`} />
+
+<LuaPlayground client:load code={`for i = 1, 3 do
+  local squared = i * i
+  print(squared)
+end
+
+print(i)        -- nil, loop variables don't leak out
+print(squared)  -- nil either`} />
+
+## Shadowing
+
+A `local` declared with the same name as an existing variable **shadows** it within its block — the outer one is temporarily hidden, not overwritten:
+
+<LuaPlayground client:load code={`local x = "outer"
+
+do
+  local x = "inner"
+  print(x)  -- "inner"
+end
+
+print(x)  -- "outer" -- unaffected`} />
+
+## Why this matters for closures
+
+Recall from the previous lesson: closures capture *variables*, not values. Scope determines exactly which variable gets captured — a classic bug is capturing a loop variable incorrectly. In Lua, the numeric `for` loop actually creates a **new local** on each iteration, so this works correctly:
+
+<LuaPlayground client:load code={`local fns = {}
+
+for i = 1, 3 do
+  fns[i] = function() return i end
+end
+
+print(fns[1](), fns[2](), fns[3]())  -- 1  2  3, as expected`} />
+
+## Try it yourself
+
+Write a function `counterFactory()` using a `local` variable for its internal count (like the closure example from the previous lesson), then verify that a global variable of the same name (`count`) is unaffected by it.
+
+<LuaPlayground client:load height={160} code={`count = "I am global"
+
+-- your code here
+
+print(count)  -- should still print "I am global"`} />

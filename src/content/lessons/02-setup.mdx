@@ -1,0 +1,80 @@
+---
+title: "Setup & Running Lua"
+description: "How the playground on this site works, plus how to install Lua for real projects."
+order: 2
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+You don't need to install anything to follow this course — every playground on this site runs a real Lua interpreter compiled to JavaScript ([Fengari](https://fengari.io/)), executing entirely in your browser. Nothing you type is sent to a server.
+
+<LuaPlayground client:load code={`-- Edit this, then press Run
+print("It works!")`} />
+
+That said, once you start writing real projects you'll want Lua installed on your machine. Here's how, for whichever OS you're on.
+
+## macOS
+
+Using [Homebrew](https://brew.sh/):
+
+```
+brew install lua
+```
+
+Then check it worked:
+
+```
+lua -v
+```
+
+## Windows
+
+The easiest path is [LuaBinaries](https://sourceforge.net/projects/luabinaries/), or install via a package manager like [Scoop](https://scoop.sh/):
+
+```
+scoop install lua
+```
+
+## Linux
+
+Most distros package Lua directly:
+
+```
+# Debian/Ubuntu
+sudo apt install lua5.4
+
+# Fedora
+sudo dnf install lua
+```
+
+## Running a script
+
+Save some code to a file, e.g. `hello.lua`:
+
+```
+print("Hello, world!")
+```
+
+Then run it from the terminal:
+
+```
+lua hello.lua
+```
+
+## The interactive REPL
+
+Typing `lua` with no arguments drops you into an interactive prompt where you can type expressions and see results immediately — great for experimenting:
+
+```
+$ lua
+Lua 5.4.6  Copyright (C) 1994-2023 Lua.org, PUC-Rio
+> print("hi")
+hi
+> 2 + 2
+4
+```
+
+## A note on versions
+
+This course targets **Lua 5.3/5.4** syntax, which is what you'll get from a fresh install today. The in-browser playgrounds run Lua 5.3 semantics. The differences that matter for beginners are minor (mostly around integer division and bitwise operators), and we'll call them out if they come up.
+
+If you're here because of a specific platform — Roblox, Neovim, LÖVE2D — the core language you're about to learn is the same; only the *libraries* available to you differ.

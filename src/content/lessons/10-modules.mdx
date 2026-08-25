@@ -1,0 +1,88 @@
+---
+title: "Modules & require"
+description: "Organizing Lua code across multiple files with the module pattern and require."
+order: 10
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+As programs grow, you'll want to split code across multiple files. Lua's mechanism for this is refreshingly simple: a module is just **a file that returns a table**.
+
+> The examples below involve multiple files, so they're shown as static code (not runnable in the single-file playground) — but the pattern itself uses only things you already know: tables and functions.
+
+## Writing a module
+
+`geometry.lua`:
+
+```
+local geometry = {}
+
+function geometry.areaOfCircle(radius)
+  return math.pi * radius ^ 2
+end
+
+function geometry.areaOfRectangle(width, height)
+  return width * height
+end
+
+return geometry
+```
+
+The whole module's public API is just the fields on the `geometry` table. Anything declared `local` inside the file and *not* attached to that table stays private to the module.
+
+## Using a module
+
+`main.lua`, in the same directory:
+
+```
+local geometry = require("geometry")  -- note: no ".lua" extension
+
+print(geometry.areaOfCircle(4))
+print(geometry.areaOfRectangle(3, 5))
+```
+
+`require` looks the module up by name, runs it **once** (even if required from multiple places — results are cached), and returns whatever it returned.
+
+## The module pattern, without multiple files
+
+Since a module is just "a table full of functions," you can use exactly the same pattern inside a single file to keep related functions grouped and to keep everything else out of the global scope. This part *is* runnable:
+
+<LuaPlayground client:load code={`local StringUtils = {}
+
+function StringUtils.capitalize(s)
+  return s:sub(1, 1):upper() .. s:sub(2)
+end
+
+function StringUtils.reverse(s)
+  return s:reverse()
+end
+
+print(StringUtils.capitalize("lua"))
+print(StringUtils.reverse("lua"))`} />
+
+## Private state in a module
+
+Because `local` variables in a file are only visible within that file, modules give you real encapsulation — the classic example is an internal counter no outside code can touch directly:
+
+<LuaPlayground client:load code={`local Logger = {}
+local logCount = 0  -- private to this "module"
+
+function Logger.log(message)
+  logCount = logCount + 1
+  print("[" .. logCount .. "] " .. message)
+end
+
+function Logger.count()
+  return logCount
+end
+
+Logger.log("Server started")
+Logger.log("Listening on port 8080")
+print("Total logs:", Logger.count())`} />
+
+## Try it yourself
+
+Design (on paper, or in the playground as a single-file simulation) a `Stack` module with `push`, `pop`, and `isEmpty` functions, keeping the underlying table private to the module.
+
+<LuaPlayground client:load height={200} code={`local Stack = {}
+-- your code here
+`} />

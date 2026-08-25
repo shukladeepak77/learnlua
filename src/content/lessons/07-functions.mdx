@@ -1,0 +1,104 @@
+---
+title: "Functions"
+description: "Defining functions, multiple return values, varargs, and closures."
+order: 7
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+## Defining and calling functions
+
+<LuaPlayground client:load code={`local function greet(name)
+  return "Hello, " .. name .. "!"
+end
+
+print(greet("Ada"))`} />
+
+`local function greet(...)` is the idiomatic way to define a named function — it's shorthand for `local greet = function(...)`.
+
+## Multiple return values
+
+Unlike most mainstream languages, Lua functions can return more than one value natively — no need to wrap them in an array or object:
+
+<LuaPlayground client:load code={`local function minMax(a, b, c)
+  local lo = math.min(a, b, c)
+  local hi = math.max(a, b, c)
+  return lo, hi
+end
+
+local low, high = minMax(4, 9, 1)
+print(low, high)
+
+-- extra returned values are simply discarded if you don't capture them
+local justLow = minMax(4, 9, 1)
+print(justLow)`} />
+
+## Default & optional arguments
+
+Lua has no built-in default-argument syntax — missing arguments are simply `nil`, so the idiom is to check with `or`:
+
+<LuaPlayground client:load code={`local function greet(name, greeting)
+  greeting = greeting or "Hello"
+  return greeting .. ", " .. name .. "!"
+end
+
+print(greet("Ada"))
+print(greet("Ada", "Hi"))`} />
+
+## Variadic functions (varargs)
+
+`...` collects any number of extra arguments; `{...}` packs them into a table:
+
+<LuaPlayground client:load code={`local function sum(...)
+  local total = 0
+  for _, n in ipairs({...}) do
+    total = total + n
+  end
+  return total
+end
+
+print(sum(1, 2, 3))
+print(sum(10, 20, 30, 40))`} />
+
+## Functions as values
+
+Functions are first-class — store them in variables or tables, pass them as arguments, return them from other functions:
+
+<LuaPlayground client:load code={`local function apply(fn, value)
+  return fn(value)
+end
+
+local function double(x) return x * 2 end
+
+print(apply(double, 21))
+
+-- anonymous function passed directly
+print(apply(function(x) return x * x end, 5))`} />
+
+## Closures
+
+A closure is a function that "remembers" variables from the scope it was created in — even after that scope has finished running. This is one of Lua's most powerful features:
+
+<LuaPlayground client:load code={`local function makeCounter()
+  local count = 0
+  return function()
+    count = count + 1
+    return count
+  end
+end
+
+local counter = makeCounter()
+print(counter())  -- 1
+print(counter())  -- 2
+print(counter())  -- 3
+
+local counter2 = makeCounter()  -- a fresh, independent count
+print(counter2()) -- 1`} />
+
+Each call to `makeCounter()` creates a brand-new `count` variable, and the returned function keeps a private reference to it. This pattern is how you build things like private state without classes.
+
+## Try it yourself
+
+Write a function `makeMultiplier(factor)` that returns a new function which multiplies its argument by `factor`. Then create a `double` and a `triple` from it and test both.
+
+<LuaPlayground client:load height={180} code={`-- your code here
+`} />

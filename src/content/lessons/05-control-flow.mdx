@@ -1,0 +1,82 @@
+---
+title: "Control Flow"
+description: "if/elseif/else, while, repeat/until, and the two flavors of for loop."
+order: 5
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+## if / elseif / else
+
+Note the keywords: `then` after the condition, and `end` to close the block — Lua doesn't use braces or significant whitespace.
+
+<LuaPlayground client:load code={`local score = 82
+
+if score >= 90 then
+  print("A")
+elseif score >= 80 then
+  print("B")
+elseif score >= 70 then
+  print("C")
+else
+  print("F")
+end`} />
+
+## while loops
+
+<LuaPlayground client:load code={`local i = 1
+while i <= 5 do
+  print(i)
+  i = i + 1
+end`} />
+
+## repeat / until
+
+Like a `do...while` in other languages — the body always runs at least once, and the condition is checked *after*. Note it's `until`, not `while`, and the condition is when to **stop**:
+
+<LuaPlayground client:load code={`local i = 1
+repeat
+  print(i)
+  i = i + 1
+until i > 5`} />
+
+## Numeric for loop
+
+`for i = start, stop, step do ... end` — the step is optional and defaults to `1`.
+
+<LuaPlayground client:load code={`for i = 1, 5 do
+  print(i)
+end
+
+print("---")
+
+for i = 10, 1, -2 do
+  print(i)
+end`} />
+
+## Generic for loop (iterating collections)
+
+This is the loop you'll use constantly once you get to tables — it uses an *iterator function*. The two you'll reach for most are `ipairs` (ordered array-style iteration) and `pairs` (all key/value pairs, any order):
+
+<LuaPlayground client:load code={`local fruits = {"apple", "banana", "cherry"}
+
+for index, value in ipairs(fruits) do
+  print(index, value)
+end`} />
+
+## break
+
+`break` exits the nearest loop immediately (Lua has no `continue` — the idiomatic workaround is wrapping the loop body in an `if`):
+
+<LuaPlayground client:load code={`for i = 1, 10 do
+  if i > 3 then
+    break
+  end
+  print(i)
+end`} />
+
+## Try it yourself
+
+Print all numbers from 1 to 30. For multiples of 3, print "Fizz" instead; for multiples of 5, print "Buzz"; for multiples of both, print "FizzBuzz". (Hint: use `%` for remainder.)
+
+<LuaPlayground client:load height={160} code={`-- your code here
+`} />

@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const facts = [
+  {
+    title: "The name means \"Moon\"",
+    body: "\"Lua\" is Portuguese for \"moon.\" It was created at PUC-Rio in Brazil in 1993, and — fittingly — has no version called \"Lua SE\" or \"Lua Enterprise\"; there's just Lua.",
+  },
+  {
+    title: "It predates JavaScript",
+    body: "Lua shipped in 1993, two years before JavaScript existed. Both are dynamically-typed, embeddable scripting languages, but they evolved almost entirely independently.",
+  },
+  {
+    title: "It powers some of the biggest games ever made",
+    body: "Roblox (via Luau, a Lua dialect), World of Warcraft's addon system, and countless indie titles built on LÖVE2D and Defold all script their game logic in Lua.",
+  },
+  {
+    title: "One of the fastest scripting language implementations",
+    body: "LuaJIT, a just-in-time compiler for Lua, is frequently benchmarked as one of the fastest dynamic language runtimes in existence — competitive with, and sometimes faster than, statically-compiled code for certain workloads.",
+  },
+  {
+    title: "It's tiny on purpose",
+    body: "The entire reference implementation is around 30,000 lines of C and compiles to a few hundred KB. Lua was explicitly designed to be embedded inside other applications, not to be a standalone, batteries-included platform.",
+  },
+  {
+    title: "Redis, Nginx, and Wireshark all embed it",
+    body: "Beyond games, Lua is the scripting layer for Redis (EVAL commands), Nginx (via OpenResty), and packet-analysis tooling in Wireshark — anywhere a host application wants to expose safe, sandboxed scripting.",
+  },
+];
+---
+<BaseLayout title="About Lua" description="Fun facts and real-world context about the Lua programming language.">
+  <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">About Lua</h1>
+  <p class="text-slate-600 dark:text-slate-400 mb-10 max-w-2xl">
+    A little context on the language you're learning — where it came from, and where it shows up in the wild.
+  </p>
+
+  <div class="grid gap-4 sm:grid-cols-2 max-w-4xl">
+    {facts.map((fact) => (
+      <div class="rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+        <h2 class="font-semibold text-slate-900 dark:text-slate-100 mb-2">{fact.title}</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-6">{fact.body}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-10 max-w-2xl rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 p-5">
+    <p class="text-sm text-emerald-900 dark:text-emerald-300">
+      Ready to write some? Head back to the
+      <a href="/" class="underline font-medium hover:no-underline">course outline</a>
+      or jump straight into
+      <a href="/lessons/01-introduction" class="underline font-medium hover:no-underline">Lesson 1</a>.
+    </p>
+  </div>
+</BaseLayout>

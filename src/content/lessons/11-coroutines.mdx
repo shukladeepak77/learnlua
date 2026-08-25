@@ -1,0 +1,70 @@
+---
+title: "Coroutines"
+description: "Cooperative multitasking: functions that can pause and resume."
+order: 11
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+A coroutine is a function that can **pause** itself midway through (with `coroutine.yield`) and be **resumed** later, continuing exactly where it left off. This isn't multithreading — only one coroutine ever runs at a time — but it's an extremely useful tool for things like game loops, iterators, and generators.
+
+## Creating and resuming a coroutine
+
+<LuaPlayground client:load code={`local co = coroutine.create(function()
+  print("start")
+  coroutine.yield()
+  print("resumed once")
+  coroutine.yield()
+  print("resumed twice")
+end)
+
+print(coroutine.status(co))  -- "suspended"
+coroutine.resume(co)         -- prints "start", then pauses at yield
+print(coroutine.status(co))  -- "suspended"
+coroutine.resume(co)         -- prints "resumed once"
+coroutine.resume(co)         -- prints "resumed twice"
+print(coroutine.status(co))  -- "dead" -- function ran to completion`} />
+
+## Passing values through yield/resume
+
+Values passed to `resume` (after the first call) become the return values of `yield` *inside* the coroutine. Values passed to `yield` become the extra return values of `resume` on the outside:
+
+<LuaPlayground client:load code={`local co = coroutine.create(function(startValue)
+  print("got from resume:", startValue)
+  local x = coroutine.yield("first yield")
+  print("got from resume:", x)
+  return "final result"
+end)
+
+local ok, value = coroutine.resume(co, "hello")
+print("main got:", value)  -- "first yield"
+
+ok, value = coroutine.resume(co, "world")
+print("main got:", value)  -- "final result"`} />
+
+## A practical use: generators
+
+Coroutines make it easy to write a function that produces a sequence of values lazily, one at a time, instead of building a whole table up front:
+
+<LuaPlayground client:load code={`local function fibonacci(limit)
+  return coroutine.wrap(function()
+    local a, b = 0, 1
+    while a < limit do
+      coroutine.yield(a)
+      a, b = b, a + b
+    end
+  end)
+end
+
+for value in fibonacci(50) do
+  io.write(value, " ")
+end
+print()`} />
+
+`coroutine.wrap` is a convenience over `coroutine.create` — instead of giving you a coroutine object you call `resume` on, it gives you a plain function you call directly, which makes it perfect for use in a `for ... in` loop like above.
+
+## Try it yourself
+
+Write a coroutine-based generator that yields the squares of 1 through `n`, then print them all with a `for` loop.
+
+<LuaPlayground client:load height={180} code={`-- your code here
+`} />

@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const lessons = (await getCollection("lessons")).sort((a, b) => a.data.order - b.data.order);
+const firstLesson = lessons[0];
+---
+<BaseLayout title="Learn Lua — A Free Interactive Course">
+  <section class="max-w-3xl">
+    <p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-3">Free & interactive</p>
+    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-5">
+      Learn Lua, right in your browser.
+    </h1>
+    <p class="text-lg text-slate-600 dark:text-slate-300 leading-8 mb-8">
+      A hands-on course for the small, fast scripting language behind Roblox, Neovim, World of
+      Warcraft addons, and countless embedded systems. Every example is a real, runnable Lua
+      interpreter — no installs, no sign-up, no server round-trips.
+    </p>
+    <div class="flex flex-wrap gap-3">
+      <a
+        href={`/lessons/${firstLesson.id}`}
+        class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-500 transition-colors"
+      >
+        Start Learning →
+      </a>
+      <a
+        href="/cheatsheet"
+        class="inline-flex items-center gap-2 rounded-md border border-slate-300 dark:border-slate-700 px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      >
+        View Cheatsheet
+      </a>
+    </div>
+  </section>
+
+  <section class="mt-16 grid gap-4 sm:grid-cols-3 max-w-4xl">
+    {[
+      { title: "Runs in your browser", body: "Powered by Fengari, a Lua VM compiled to JS. Nothing installed, nothing sent to a server." },
+      { title: "13 focused lessons", body: "From variables to metatables and coroutines, building toward a real capstone project." },
+      { title: "Track your progress", body: "Mark lessons complete as you go — saved locally, no account needed." },
+    ].map((f) => (
+      <div class="rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+        <h3 class="font-semibold text-slate-900 dark:text-slate-100 mb-1.5">{f.title}</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-6">{f.body}</p>
+      </div>
+    ))}
+  </section>
+
+  <section class="mt-16 max-w-3xl">
+    <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">Course outline</h2>
+    <ol class="space-y-1.5">
+      {lessons.map((lesson, i) => (
+        <li>
+          <a
+            href={`/lessons/${lesson.id}`}
+            class="group flex items-baseline gap-3 rounded-md px-3 py-2 -mx-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          >
+            <span class="text-sm tabular-nums text-slate-400 dark:text-slate-600 w-6 shrink-0">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span class="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+              {lesson.data.title}
+            </span>
+            <span class="text-sm text-slate-400 dark:text-slate-500 hidden sm:inline">
+              — {lesson.data.description}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>

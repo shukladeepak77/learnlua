@@ -1,0 +1,116 @@
+---
+title: "Capstone: Text Adventure"
+description: "Bring together tables, functions, metatables, and control flow in a small project."
+order: 13
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+You've now covered enough Lua to build something real. This capstone walks through a tiny text-adventure engine, combining almost everything from this course:
+
+- **tables** for rooms and the game state
+- **functions & closures** for actions
+- **metatables** for a `Player` object
+- **control flow** for the game loop
+- **string patterns** for parsing commands
+
+## The full example
+
+Read through this — then press Run and try changing it: add a room, add an item, change the win condition.
+
+<LuaPlayground client:load height={260} code={`-- Rooms are a table of tables: each room has a description and exits
+local rooms = {
+  hall = {
+    description = "A dusty entrance hall. A door leads north.",
+    exits = { north = "library" },
+  },
+  library = {
+    description = "Shelves of old books. There's a key on a desk. Exit is south.",
+    exits = { south = "hall" },
+    item = "key",
+  },
+}
+
+-- Player "class" using the metatable pattern from lesson 9
+local Player = {}
+Player.__index = Player
+
+function Player.new(startRoom)
+  return setmetatable({ room = startRoom, inventory = {} }, Player)
+end
+
+function Player:describeRoom()
+  local room = rooms[self.room]
+  print(room.description)
+  if room.item then
+    print("You see a " .. room.item .. " here.")
+  end
+end
+
+function Player:move(direction)
+  local room = rooms[self.room]
+  local nextRoom = room.exits[direction]
+  if nextRoom then
+    self.room = nextRoom
+    print("You go " .. direction .. ".")
+  else
+    print("You can't go that way.")
+  end
+end
+
+function Player:take()
+  local room = rooms[self.room]
+  if room.item then
+    table.insert(self.inventory, room.item)
+    print("You take the " .. room.item .. ".")
+    room.item = nil
+  else
+    print("There's nothing to take.")
+  end
+end
+
+function Player:hasItem(name)
+  for _, item in ipairs(self.inventory) do
+    if item == name then return true end
+  end
+  return false
+end
+
+-- Simulated player commands (in a real CLI game, these would come from io.read())
+local commands = { "look", "north", "take", "south", "look" }
+
+local player = Player.new("hall")
+
+for _, command in ipairs(commands) do
+  print("\\n> " .. command)
+  if command == "look" then
+    player:describeRoom()
+  elseif command == "take" then
+    player:take()
+  else
+    player:move(command)
+  end
+end
+
+print("\\nInventory: " .. table.concat(player.inventory, ", "))
+if player:hasItem("key") then
+  print("You have the key. You win!")
+end`} />
+
+## Ideas to extend it
+
+Once you're comfortable with the example above, try:
+
+1. **Add a locked door** — make `library`'s exit to a new `treasure` room require the key (check `player:hasItem("key")` before allowing the move).
+2. **Add a `use` command** that consumes an inventory item.
+3. **Add an enemy** as a table with `health`, and a `fight()` function using `math.random` for damage.
+4. **Read real input** — outside the playground, swap the simulated `commands` table for `io.read()` in a loop, so you can type commands live in a terminal.
+
+## Where to go from here
+
+You've covered the full core of the Lua language. From here, the fastest way to get better is to build something real with a specific target in mind:
+
+- **Games** — try [LÖVE2D](https://love2d.org/) (a fantastic, beginner-friendly 2D engine) or script a Roblox project.
+- **Neovim** — write your own Neovim configuration in Lua.
+- **The reference manual** — the [official Lua 5.4 manual](https://www.lua.org/manual/5.4/) is short, precise, and worth reading end to end once the basics feel natural.
+
+Check the [Cheatsheet](/cheatsheet) any time you need a quick syntax reminder.

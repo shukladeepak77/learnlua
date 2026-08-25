@@ -1,0 +1,35 @@
+---
+title: "Introduction to Lua"
+description: "What Lua is, why it exists, and where you'll find it in the real world."
+order: 1
+---
+import LuaPlayground from "../../components/LuaPlayground";
+
+Lua is a small, fast, embeddable scripting language created in 1993 in Brazil. It wasn't designed to be a general-purpose language you build entire operating systems in — it was designed to be **dropped into other programs** so that program can be scripted and extended.
+
+That single design goal explains almost everything about Lua: it's tiny (the reference implementation compiles to a few hundred KB), it has a small, consistent set of features, and it embeds into C (and by extension, C++, JavaScript, and more) with very little friction.
+
+## Where you'll actually see Lua
+
+- **Game development** — Lua is the scripting language behind *Roblox* (Luau, a Lua dialect), *World of Warcraft* addons, *Garry's Mod*, and engines like *LÖVE2D* and *Defold*.
+- **Neovim** — modern Neovim configuration and plugins are written in Lua.
+- **Embedded & IoT** — Lua's tiny footprint makes it popular for scripting on constrained hardware (e.g. NodeMCU on ESP8266/ESP32).
+- **Adobe apps, Wireshark, Redis** — all let you script behavior with Lua.
+
+## What makes Lua distinctive
+
+- **One data structure to rule them all.** Lua has a single compound data structure — the **table** — which does the job of arrays, dictionaries, objects, and namespaces in most other languages.
+- **1-based indexing.** Unlike C, JavaScript, or Python, Lua sequences start counting at `1`, not `0`.
+- **Dynamically typed**, with a handful of core types: `nil`, `boolean`, `number`, `string`, `function`, `table`, and a couple of advanced ones you'll meet later (`userdata`, `thread`).
+- **First-class functions and closures** baked in from the start.
+- **No built-in class system** — instead, Lua gives you *metatables*, a small set of hooks powerful enough to build OOP, operator overloading, and more yourself.
+
+## Try it right now
+
+Every code example on this site is **live** — you can edit it and press Run. Nothing is installed and nothing leaves your browser; the Lua interpreter itself is compiled to JavaScript and runs locally. Give it a try:
+
+<LuaPlayground client:load code={`print("Hello from Lua!")
+print(1 + 2 * 3)
+print("Lua has " .. 7 .. " basic types")`} />
+
+Don't worry about understanding every line yet — the next lessons build this up piece by piece. By the end of this course you'll be able to read and write real Lua scripts, including the table and function patterns that make Lua code look the way it does.
